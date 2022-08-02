@@ -10,7 +10,7 @@ use Getopt::Std;
 use IO::Barf qw(barf);
 use Pod::Example qw(get sections);
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 # Constructor.
 sub new {
@@ -189,6 +189,6 @@ BSD 2-Clause License
 
 =head1 VERSION
 
-0.01
+0.02
 
 =cut
