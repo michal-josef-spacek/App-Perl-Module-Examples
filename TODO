@@ -2,7 +2,8 @@ TODO
 ====
 1. Tests.
 2. Option for directory (actual dir now).
-3.
+3. Rewrite debug mode to simple list of files, which found.
+4.
 
 Applied
 =======
