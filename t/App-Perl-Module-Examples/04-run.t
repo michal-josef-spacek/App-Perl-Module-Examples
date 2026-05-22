@@ -68,9 +68,20 @@ dircopy(catdir($data_dir, 'example1'), $temp_dir)
 	or err 'Cannot copy example1 data directory.';
 mkdir catfile($temp_dir, 'examples');
 @ARGV = (
+	'-d',
 	$temp_dir,
 );
-is(App::Perl::Module::Examples->new->run, 0, 'Run on working directory.');
+$right_ret = <<'END';
+Found Perl modules:
+- Ex.pm
+END
+stdout_is(
+	sub {
+		App::Perl::Module::Examples->new->run;
+	},
+	$right_ret,
+	'Run on working directory in debug.',
+);
 $right_ret = <<'END';
 #!/usr/bin/env perl
 

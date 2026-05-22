@@ -2,6 +2,7 @@
  - Add help() helper to doc and remove XXX comment.
  - Add optional working directory.
  - Add test for bad option.
+ - Change debug mode to simple print of found Perl modules.
  - Update copyright years.
 
 0.03 2024-05-12T12:40:09+02:00

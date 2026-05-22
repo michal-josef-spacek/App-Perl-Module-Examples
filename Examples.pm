@@ -5,7 +5,7 @@ use warnings;
 
 use Class::Utils qw(set_params);
 use File::Find::Rule;
-use File::Spec::Functions qw(catdir catfile);
+use File::Spec::Functions qw(abs2rel catdir catfile);
 use Getopt::Std;
 use IO::Barf qw(barf);
 use Pod::Example qw(get sections);
@@ -57,11 +57,12 @@ sub run {
 		$rule->new,
 	)->name('*.pm')->in($working_dir);
 
-	# Dump perl modules in debug mode.
+	# Print Perl modules in debug mode.
 	if ($self->{'_opts'}->{'d'}) {
-		require Dumpvalue;
-		my $dump = Dumpvalue->new;
-		$dump->dumpValues(\@pm);
+		print "Found Perl modules:\n";
+		foreach my $pm (@pm) {
+			print '- '.abs2rel($pm, $working_dir)."\n";
+		}
 	}
 
 	# For each example save example.

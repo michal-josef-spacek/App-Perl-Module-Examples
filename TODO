@@ -1,10 +1,12 @@
 TODO
 ====
 1. Tests.
-3. Rewrite debug mode to simple list of files, which found.
 4.
 
 Applied
 =======
 2. Option for directory (actual dir now).
+OK [20260522] skim
+
+3. Rewrite debug mode to simple list of files, which found.
 OK [20260522] skim
