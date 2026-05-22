@@ -1,4 +1,5 @@
 0.04
+ - Add help() helper to doc and remove XXX comment.
 
 0.03 2024-05-12T12:40:09+02:00
  - Add test for help.

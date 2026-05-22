@@ -13,17 +13,7 @@ use Test::Output;
 @ARGV = (
 	'-h',
 );
-my $script = abs2rel(File::Object->new->file('04-run.t')->s);
-# XXX Hack for missing abs2rel on Windows.
-if ($OSNAME eq 'MSWin32') {
-	$script =~ s/\\/\//msg;
-}
-my $right_ret = <<"END";
-Usage: $script [-d] [-h] [--version]
-	-d		Debug mode.
-	-h		Print help.
-	--version	Print version.
-END
+my $right_ret = help();
 stderr_is(
 	sub {
 		App::Perl::Module::Examples->new->run;
@@ -32,3 +22,18 @@ stderr_is(
 	$right_ret,
 	'Run help.',
 );
+
+sub help {
+	my $script = abs2rel(__FILE__);
+	if ($OSNAME eq 'MSWin32') {
+		$script =~ s/\\/\//msg;
+	}
+	my $help = <<"END";
+Usage: $script [-d] [-h] [--version]
+	-d		Debug mode.
+	-h		Print help.
+	--version	Print version.
+END
+
+	return $help;
+}
