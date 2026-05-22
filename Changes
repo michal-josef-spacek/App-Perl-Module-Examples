@@ -1,4 +1,4 @@
-0.04
+0.04 2026-05-22T17:18:17+02:00
  - Add =head1 EXAMPLES section to doc.
  - Add help() helper to doc and remove XXX comment.
  - Add optional working directory.
