@@ -1,4 +1,5 @@
 0.04
+ - Add =head1 EXAMPLES section to doc.
  - Add help() helper to doc and remove XXX comment.
  - Add optional working directory.
  - Add support for =head1 EXAMPLES with =head2 EXAMPLE1 sections.
