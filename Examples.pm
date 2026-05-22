@@ -5,7 +5,7 @@ use warnings;
 
 use Class::Utils qw(set_params);
 use File::Find::Rule;
-use File::Spec::Functions qw(catfile);
+use File::Spec::Functions qw(catdir catfile);
 use Getopt::Std;
 use IO::Barf qw(barf);
 use Pod::Example qw(get sections);
@@ -36,23 +36,26 @@ sub run {
 		'h' => 0,
 	};
 	if (! getopts('dh', $self->{'_opts'})
-		|| $self->{'_opts'}->{'h'}) {
+		|| $self->{'_opts'}->{'h'}
+		|| @ARGV > 1) {
 
-		print STDERR "Usage: $0 [-d] [-h] [--version]\n";
+		print STDERR "Usage: $0 [-d] [-h] [--version] [working_dir]\n";
 		print STDERR "\t-d\t\tDebug mode.\n";
 		print STDERR "\t-h\t\tPrint help.\n";
 		print STDERR "\t--version\tPrint version.\n";
+		print STDERR "\t[working_dir]\tWorking directory (default is actual).\n";
 		return 1;
 	}
+	my $working_dir = $ARGV[0] || '.';
 
-	# Find all perl module files in actual directory.
+	# Find all perl module files in working directory.
 	my $rule = File::Find::Rule->new;
 	my @pm = $rule->or(
 		$rule->new->directory->name('t')->prune->discard,
 		$rule->new->directory->name('inc')->prune->discard,
 		$rule->new->directory->name('blib')->prune->discard,
 		$rule->new,
-	)->name('*.pm')->in('.');
+	)->name('*.pm')->in($working_dir);
 
 	# Dump perl modules in debug mode.
 	if ($self->{'_opts'}->{'d'}) {
@@ -78,11 +81,12 @@ sub run {
 			}
 			$example_data = "#!/usr/bin/env perl\n\n".
 				$example_data;
-			my $example_path = catfile('examples', $example_file);
+			my $examples_dir = catdir($working_dir, 'examples');
+			my $example_path = catfile($examples_dir, $example_file);
 
 			# Examples directory.
-			if (! -r 'examples') {
-				mkdir 'examples';
+			if (! -r $examples_dir) {
+				mkdir $examples_dir;
 			}
 
 			# Save example.
@@ -157,10 +161,11 @@ Returns 1 for error, 0 for success.
  exit App::Perl::Module::Examples->new->run;
 
  # Output like:
- # Usage: ./print_help.pl [-d] [-h] [--version]
+ # Usage: ./print_help.pl [-d] [-h] [--version] [working_dir]
  #         -d              Debug mode.
  #         -h              Print help.
  #         --version       Print version.
+ #         [working_dir]   Working directory (default is actual).
 
 =head1 DEPENDENCIES
 

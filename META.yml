@@ -3,11 +3,16 @@ abstract: 'Tool for creating examples from Perl module POD documentation.'
 author:
   - 'Michal Josef Spacek <skim@cpan.org>'
 build_requires:
+  Cwd: 0
   English: 0
+  Error::Pure: 0
   Error::Pure::Utils: 0
   ExtUtils::MakeMaker: 6.59
+  File::Copy::Recursive: 0
   File::Object: 0
   File::Spec::Functions: 0
+  File::Temp: 0
+  Perl6::Slurp: 0
   Test::More: 0
   Test::NoWarnings: 0
   Test::Output: 0

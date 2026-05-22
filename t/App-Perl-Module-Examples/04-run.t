@@ -2,13 +2,21 @@ use strict;
 use warnings;
 
 use App::Perl::Module::Examples;
+use Cwd qw(getcwd);
 use English;
+use Error::Pure qw(err);
+use File::Copy::Recursive qw(dircopy);
+use File::Temp qw(tempdir);
 use File::Object;
-use File::Spec::Functions qw(abs2rel);
-use Test::More 'tests' => 4;
+use File::Spec::Functions qw(abs2rel catdir catfile);
+use Perl6::Slurp qw(slurp);
+use Test::More 'tests' => 10;
 use Test::NoWarnings;
 use Test::Output;
 use Test::Warn 0.31;
+
+# Data directory.
+my $data_dir = File::Object->new->up->dir('data')->s;
 
 # Test.
 @ARGV = (
@@ -39,16 +47,97 @@ stderr_is(
 	'Run help (-x - bad option).',
 );
 
+# Test.
+@ARGV = (
+	'one',
+	'two',
+);
+$right_ret = help();
+stderr_is(
+	sub {
+		App::Perl::Module::Examples->new->run;
+		return;
+	},
+	$right_ret,
+	'Run help (too many arguments).',
+);
+
+# Test.
+my $temp_dir = tempdir(CLEANUP => 1);
+dircopy(catdir($data_dir, 'example1'), $temp_dir)
+	or err 'Cannot copy example1 data directory.';
+mkdir catfile($temp_dir, 'examples');
+@ARGV = (
+	$temp_dir,
+);
+is(App::Perl::Module::Examples->new->run, 0, 'Run on working directory.');
+$right_ret = <<'END';
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# Print.
+print "Foo.\n";
+END
+chomp $right_ret;
+is(
+	slurp(catfile($temp_dir, 'examples', 'working_dir.pl')),
+	$right_ret,
+	'Generate example in working directory.',
+);
+
+# Test.
+my $cwd = getcwd;
+my $default_dir = tempdir(CLEANUP => 1);
+dircopy(catdir($data_dir, 'example2'), $default_dir)
+	or err 'Cannot copy example2 data directory.';
+chdir $default_dir or err "Cannot chdir to '$default_dir'.";
+@ARGV = ();
+is(App::Perl::Module::Examples->new->run, 0, 'Run on default working directory.');
+$right_ret = <<'END';
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# Print.
+print "Default.\n";
+END
+chomp $right_ret;
+is(
+	slurp(catfile('examples', 'ex1.pl')),
+	$right_ret,
+	'Generate example in default working directory.',
+);
+$right_ret = <<'END';
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# Print.
+print "Nested.\n";
+END
+chomp $right_ret;
+is(
+	slurp(catfile('examples', 'nested.pl')),
+	$right_ret,
+	'Generate example from module in subdirectory.',
+);
+chdir $cwd or err "Cannot chdir to '$cwd'.";
+
 sub help {
 	my $script = abs2rel(__FILE__);
 	if ($OSNAME eq 'MSWin32') {
 		$script =~ s/\\/\//msg;
 	}
 	my $help = <<"END";
-Usage: $script [-d] [-h] [--version]
+Usage: $script [-d] [-h] [--version] [working_dir]
 	-d		Debug mode.
 	-h		Print help.
 	--version	Print version.
+	[working_dir]	Working directory (default is actual).
 END
 
 	return $help;

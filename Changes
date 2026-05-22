@@ -1,5 +1,6 @@
 0.04
  - Add help() helper to doc and remove XXX comment.
+ - Add optional working directory.
  - Add test for bad option.
  - Update copyright years.
 

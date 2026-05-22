@@ -28,7 +28,7 @@ perl-module-examples - Tool for creating examples from Perl module POD documenta
 
 =head1 SYNOPSIS
 
- perl-module-examples [-d] [-h] [--version]
+ perl-module-examples [-d] [-h] [--version] [working_dir]
 
 =head1 DESCRIPTION
 
@@ -50,6 +50,14 @@ Print help.
 =item * C<--version>
 
 Print version of script.
+
+=item * C<[working_dir]>
+
+Working directory.
+
+It's optional.
+
+Default value is actual directory.
 
 =back
 
