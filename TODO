@@ -1,6 +1,5 @@
 TODO
 ====
-1. Tests.
 4.
 
 Applied
@@ -9,4 +8,7 @@ Applied
 OK [20260522] skim
 
 3. Rewrite debug mode to simple list of files, which found.
+OK [20260522] skim
+
+1. Tests.
 OK [20260522] skim
