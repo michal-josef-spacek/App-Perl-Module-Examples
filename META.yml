@@ -39,7 +39,7 @@ requires:
   File::Spec::Functions: 0
   Getopt::Std: 0
   IO::Barf: 0
-  Pod::Example: 0.12
+  Pod::Example: 0.17
   perl: 5.6.0
 resources:
   bugtracker: https://github.com/michal-josef-spacek/App-Perl-Module-Examples/issues

@@ -8,7 +8,7 @@ use File::Find::Rule;
 use File::Spec::Functions qw(abs2rel catdir catfile);
 use Getopt::Std;
 use IO::Barf qw(barf);
-use Pod::Example qw(get sections);
+use Pod::Example 0.17 qw(get sections);
 
 our $VERSION = 0.04;
 
@@ -74,9 +74,11 @@ sub run {
 
 		# For each section.
 		foreach my $example_sec (@examples) {
+			my ($section, $number_of_example) = _section_and_number($example_sec);
 
 			# Create example content.
-			my ($example_data, $example_file) = get($perl_module_file, $example_sec);
+			my ($example_data, $example_file) = get($perl_module_file, $section,
+				$number_of_example);
 			if (! defined $example_file) {
 				$example_file = sprintf 'ex%d.pl', $num;
 			}
@@ -99,6 +101,17 @@ sub run {
 	}
 	
 	return 0;
+}
+
+# Get section name and number of example.
+sub _section_and_number {
+	my $example_sec = shift;
+
+	if ($example_sec =~ m/^(.+?)(\d+)$/ms) {
+		return ($1, $2);
+	}
+
+	return ($example_sec, undef);
 }
 
 1;

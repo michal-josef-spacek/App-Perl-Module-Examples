@@ -1,6 +1,7 @@
 0.04
  - Add help() helper to doc and remove XXX comment.
  - Add optional working directory.
+ - Add support for =head1 EXAMPLES with =head2 EXAMPLE1 sections.
  - Add test for bad option.
  - Change debug mode to simple print of found Perl modules.
  - Update copyright years.

@@ -10,7 +10,7 @@ use File::Temp qw(tempdir);
 use File::Object;
 use File::Spec::Functions qw(abs2rel catdir catfile);
 use Perl6::Slurp qw(slurp);
-use Test::More 'tests' => 10;
+use Test::More 'tests' => 13;
 use Test::NoWarnings;
 use Test::Output;
 use Test::Warn 0.31;
@@ -137,6 +137,45 @@ is(
 	'Generate example from module in subdirectory.',
 );
 chdir $cwd or err "Cannot chdir to '$cwd'.";
+
+# Test.
+my $examples_dir = tempdir(CLEANUP => 1);
+dircopy(catdir($data_dir, 'example3'), $examples_dir)
+	or err 'Cannot copy example3 data directory.';
+@ARGV = (
+	$examples_dir,
+);
+is(App::Perl::Module::Examples->new->run, 0, 'Run with EXAMPLES section.');
+$right_ret = <<'END';
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# Print.
+print "First.\n";
+END
+chomp $right_ret;
+is(
+	slurp(catfile($examples_dir, 'examples', 'first.pl')),
+	$right_ret,
+	'Generate EXAMPLE1 from EXAMPLES.',
+);
+$right_ret = <<'END';
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+# Print.
+print "Second.\n";
+END
+chomp $right_ret;
+is(
+	slurp(catfile($examples_dir, 'examples', 'second.pl')),
+	$right_ret,
+	'Generate EXAMPLE2 from EXAMPLES.',
+);
 
 sub help {
 	my $script = abs2rel(__FILE__);
